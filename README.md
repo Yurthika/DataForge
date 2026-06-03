@@ -113,31 +113,26 @@ Every error includes: row number · column · actual value · severity · sugges
 
 ---
 
-## 🏗 Architecture
-┌─────────────────────────────────────────┐
-│           app.py  —  Streamlit UI        │
-│   5-step flow via st.session_state       │
-└──────────────────┬──────────────────────┘
-│
-┌───────────▼───────────┐
-│      DataLoader        │  ← Parses Excel / CSV
-└───────────┬───────────┘
-│
-┌───────────▼───────────┐
-│     SchemaMapper       │  ← Fuzzy column mapping
-└───────────┬───────────┘
-│
-┌───────────▼───────────┐
-│   ValidationEngine     │  ← 6 rule checks
-└───────────┬───────────┘
-│
-┌───────────▼───────────┐
-│    ReadinessScorer     │  ← Weighted 0–100 score
-└───────────┬───────────┘
-│
-┌───────────▼───────────┐
-│    ReportGenerator     │  ← 3 Excel exports
-└───────────────────────┘
+## 🏗 System Architecture
+
+```mermaid
+flowchart LR
+
+    U[👤 User]
+
+    U --> UI[🖥 Streamlit UI<br/>app.py]
+
+    UI --> DL[📁 DataLoader]
+    DL --> SM[🔗 SchemaMapper]
+    SM --> VE[⚙ ValidationEngine]
+    VE --> RS[📊 ReadinessScorer]
+    RS --> DB[📈 Dashboard]
+    RS --> RG[📥 ReportGenerator]
+
+    RG --> EX1[Valid Data.xlsx]
+    RG --> EX2[Error Report.xlsx]
+    RG --> EX3[Full Report.xlsx]
+```
 
 ---
 
@@ -171,24 +166,36 @@ Every error includes: row number · column · actual value · severity · sugges
 ---
 
 ## 📂 Project Structure
+
+```text
 dataforge/
 │
-├── app.py
+├── app.py                         # Main Streamlit application
+│
 ├── core/
-│   ├── validator.py              # 6-rule validation engine
-│   ├── schema_mapper.py          # Fuzzy column mapping
-│   ├── scorer.py                 # Readiness score calculator
-│   └── report_generator.py      # Excel report builder
+│   ├── validator.py               # 6-rule validation engine
+│   ├── schema_mapper.py           # Fuzzy column mapping
+│   ├── scorer.py                  # Readiness score calculator
+│   └── report_generator.py        # Excel report builder
+│
 ├── utils/
-│   ├── data_loader.py            # File parsing
-│   └── sample_data_generator.py # Demo dataset generator
+│   ├── data_loader.py             # Excel/CSV file parser
+│   └── sample_data_generator.py   # Demo dataset generator
+│
 ├── ui/
-│   ├── styles.py                 # Custom CSS
-│   ├── sidebar.py                # Sidebar navigation
-│   └── dashboard.py             # Chart components
-└── sample_data/
-├── sample_source.xlsx        # 500-row demo dataset
-└── sample_schema.xlsx        # Salesforce schema template
+│   ├── styles.py                  # Custom CSS styling
+│   ├── sidebar.py                 # Sidebar navigation
+│   └── dashboard.py               # Charts & visualizations
+│
+├── sample_data/
+│   ├── sample_source.xlsx         # Demo CRM dataset
+│   └── sample_schema.xlsx         # Salesforce schema template
+│
+├── requirements.txt
+├── README.md
+└── LICENSE
+```
+
 
 ---
 
@@ -254,7 +261,7 @@ Open `http://localhost:8501` in your browser.
 
 ## 👩‍💻 Author
 
-**Yurthika Bodepudi**
+**Yurthika Chowdary**
 
 [![GitHub](https://img.shields.io/badge/GitHub-Yurthika-181717?style=flat&logo=github)](https://github.com/Yurthika)
 
